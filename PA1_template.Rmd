@@ -73,8 +73,17 @@ library(ggplot2)
 average_step_day <- select(.data = data_df, interval, steps) %>% group_by(interval) %>% 
   summarise_all(.funs = mean, na.rm = TRUE)
 
+data_max <- max(average_step_day$steps)
+interval_max <-  average_step_day[average_step_day$steps == data_max, "interval"]
+interval_max <- as.numeric(interval_max[1, 1])
+print(data_max)
+print(interval_max)
+
 my_plot <- ggplot(data = average_step_day, aes(x = interval, y = steps)) 
-my_plot + geom_point() + geom_line() + ggtitle(label = "Average daily activity")
+my_plot + geom_point() + geom_line() + ggtitle(label = "Average daily activity") +
+geom_hline(aes(yintercept = data_max), colour = "purple", linetype = "dashed") +
+geom_vline(aes(xintercept = interval_max), colour = "purple", linetype = "dashed") +
+  geom_text(aes(y=data_max - 10, label=paste("MAX[interval, steps]=[", interval_max, ",", round(data_max, 2), "]", sep = " "),x=interval_max + 500), colour="purple", angle=0, text=element_text(size=11))
 
 ```
   
